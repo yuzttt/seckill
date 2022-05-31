@@ -1,6 +1,7 @@
 package com.example.seckill.service.impl;
 
 import com.baomidou.mybatisplus.extension.service.impl.ServiceImpl;
+import com.example.seckill.exception.GlobalException;
 import com.example.seckill.mapper.UserMapper;
 import com.example.seckill.pojo.User;
 import com.example.seckill.service.IUserService;
@@ -33,22 +34,23 @@ public class UserServiceImpl extends ServiceImpl<UserMapper, User> implements IU
     public RespBean doLogin(LoginVo loginVo) {
       String mobile=loginVo.getMobile();
       String password=loginVo.getPassword();
-      if(StringUtils.isEmpty(mobile)||StringUtils.isEmpty(password)){
-          return RespBean.error(RespBeanEnum.LOGIN_ERROR);
-      }
-
-      if(!ValidatorUtil.isMobile(mobile)){
-          return RespBean.error(RespBeanEnum.MOBILE_ERROR);
-      }
+//      if(StringUtils.isEmpty(mobile)||StringUtils.isEmpty(password)){
+//          return RespBean.error(RespBeanEnum.LOGIN_ERROR);
+//      }
+//
+//      if(!ValidatorUtil.isMobile(mobile)){
+//          return RespBean.error(RespBeanEnum.MOBILE_ERROR);
+//      }
 
         User user = userMapper.selectById(mobile);
         if(null==user){
-            return RespBean.error(RespBeanEnum.LOGIN_ERROR);
+            throw new GlobalException(RespBeanEnum.LOGIN_ERROR);
         }
         if(!MD5.formPassToDBPass(password,user.getSalt()).equals(user.getPassword())){
-            return RespBean.error(RespBeanEnum.LOGIN_ERROR);
+            throw new GlobalException(RespBeanEnum.LOGIN_ERROR);
+
         }
 
-      return null;
+      return RespBean.success();
     }
 }

@@ -1,6 +1,7 @@
 package com.example.seckill.vo;
 
-import com.example.seckill.Validator.isMobile;
+import com.example.seckill.Validator.IsMobile;
+
 import lombok.Data;
 import org.hibernate.validator.constraints.Length;
 
@@ -14,7 +15,7 @@ import javax.validation.constraints.NotNull;
 @Data
 public class LoginVo {
     @NotNull
-    @isMobile
+    @IsMobile
     private String mobile;
     @NotNull
     @Length(min=32)
