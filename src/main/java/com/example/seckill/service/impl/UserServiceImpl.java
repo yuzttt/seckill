@@ -5,7 +5,9 @@ import com.example.seckill.exception.GlobalException;
 import com.example.seckill.mapper.UserMapper;
 import com.example.seckill.pojo.User;
 import com.example.seckill.service.IUserService;
+import com.example.seckill.utils.CookieUtil;
 import com.example.seckill.utils.MD5;
+import com.example.seckill.utils.UUIDUtil;
 import com.example.seckill.utils.ValidatorUtil;
 import com.example.seckill.vo.LoginVo;
 import com.example.seckill.vo.RespBean;
@@ -14,6 +16,9 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.web.bind.annotation.ResponseBody;
 import org.thymeleaf.util.StringUtils;
+
+import javax.servlet.http.HttpServletRequest;
+import javax.servlet.http.HttpServletResponse;
 
 /**
  * <p>
@@ -31,7 +36,7 @@ public class UserServiceImpl extends ServiceImpl<UserMapper, User> implements IU
 
     @ResponseBody
     @Override
-    public RespBean doLogin(LoginVo loginVo) {
+    public RespBean doLogin(LoginVo loginVo, HttpServletRequest request, HttpServletResponse response) {
       String mobile=loginVo.getMobile();
       String password=loginVo.getPassword();
 //      if(StringUtils.isEmpty(mobile)||StringUtils.isEmpty(password)){
@@ -50,7 +55,10 @@ public class UserServiceImpl extends ServiceImpl<UserMapper, User> implements IU
             throw new GlobalException(RespBeanEnum.LOGIN_ERROR);
 
         }
-
+      //生产cookie
+        String ticket = UUIDUtil.uuid();
+        request.getSession().setAttribute(ticket,user);
+        CookieUtil.setCookie(request,response,"userTicker",ticket);
       return RespBean.success();
     }
 }
