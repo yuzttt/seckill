@@ -13,7 +13,7 @@ import org.springframework.web.bind.annotation.RequestMapping;
  * @since 2022-06-03
  */
 @Controller
-@RequestMapping("/seckill-goods")
+@RequestMapping("/seckillGoods")
 public class SeckillGoodsController {
 
 }
